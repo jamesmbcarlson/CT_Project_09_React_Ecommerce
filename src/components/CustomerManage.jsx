@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
 
 import NavBar from "./NavBar";
+import ButtonDelete from "./ButtonDelete";
 import ModalComponent from "./ModalComponent";
 
 // CustomerManage is used to add new customers and edit existing customers
@@ -15,11 +16,14 @@ function CustomerManage() {
     phone: "",
   });
   const [action, setAction] = useState("Add Customer");
+  const navigate = useNavigate();
 
   // modal hooks
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
+  const [modalColorHeaderBg, setModalColorHeaderBg] = useState("bg-primary");
+  const [modalColorHeaderTxt, setModalColorHeaderTxt] = useState("text-light");
 
   // close modal
   const handleClose = () => setShowModal(false);
@@ -35,8 +39,10 @@ function CustomerManage() {
 
       // check for valid data; warn user if not found; set to customer data if found
       if (response.data.customer_id == undefined) {
-        setModalTitle("WARNING");
+        setModalTitle("Warning");
         setModalMessage(`No customer found with ID: ${id}`);
+        setModalColorHeaderBg("bg-warning");
+        setModalColorHeaderTxt("text-dark");
         setShowModal(true);
       } else {
         setCustomerData(response.data);
@@ -56,6 +62,11 @@ function CustomerManage() {
     }));
   };
 
+  // return to customer page after deletion 
+  const returnToCustomers = () => {
+    navigate ('/customers');
+  }
+
   // submit data
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,8 +82,10 @@ function CustomerManage() {
       console.log("Updated Customer:");
 
       // update modal modalMessage
-      setModalTitle("Success!");
+      setModalTitle("Success");
       setModalMessage("Successfully Updated User!");
+      setModalColorHeaderBg("bg-success");
+      setModalColorHeaderTxt("text-light");
 
     // handle adding new customer
     } else {
@@ -84,15 +97,19 @@ function CustomerManage() {
       console.log("Added Customer:");
       
       // update modal modalMessage
-      setModalTitle("Success!");
+      setModalTitle("Success");
       setModalMessage("Successfully Created New User!");
+      setModalColorHeaderBg("bg-success");
+      setModalColorHeaderTxt("text-light");
     }
     console.log(response);
 
     // display error if creation or update was unsuccessful
     if (response.status !== 200 && response.status !== 201) {
-      setModalTitle("ERROR");
-      setModalMessage("Error Processing Your Request. Please Try Again.");
+      setModalTitle("Error");
+      setModalMessage("Error Processing Your Request.");
+      setModalColorHeaderBg("bg-danger");
+      setModalColorHeaderTxt("text-light");
     }
     setShowModal(true);
   };
@@ -100,7 +117,8 @@ function CustomerManage() {
   return (
     <div>
       <NavBar />
-      <Form className="p-4 border rounded m-4" onSubmit={handleSubmit}>
+      <h1>{action}</h1>
+      <Form className="border rounded m-4 p-4" onSubmit={handleSubmit}>
         <FloatingLabel controlId="name" label="Name">
           <Form.Control
             type="text"
@@ -110,7 +128,7 @@ function CustomerManage() {
             placeholder="Name"
           />
         </FloatingLabel>
-        <FloatingLabel controlId="email" label="Email">
+        <FloatingLabel controlId="email" label="Email" className="my-3">
           <Form.Control
             type="email"
             name="email"
@@ -128,11 +146,20 @@ function CustomerManage() {
             placeholder="123-456-7890"
           />
         </FloatingLabel>
-        <Button type="submit" className="mt-3" variant="outline-success">
-          {action}
-        </Button>
+        <div className="d-flex justify-content-between mt-4">
+          <Button type="submit" variant="primary">
+            {action}
+          </Button>
+          {id && <ButtonDelete customerData={customerData} refreshCallback={returnToCustomers} buttonText={"Delete Customer"} />}
+        </div>
+
       </Form>
-      <ModalComponent show={showModal} title={modalTitle} message={modalMessage} close={handleClose} />
+      <ModalComponent show={showModal} 
+        title={modalTitle} 
+        message={modalMessage} 
+        close={handleClose} 
+        colorHeaderBg={modalColorHeaderBg} 
+        colorHeaderTxt={modalColorHeaderTxt}/>
     </div>
   );
 }

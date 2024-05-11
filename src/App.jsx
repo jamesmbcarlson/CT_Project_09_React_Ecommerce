@@ -18,6 +18,10 @@ function App() {
         <Route path='/customer/:id' element={<CustomerBrowse/>} />
         <Route path='/customer/add' element={<CustomerManage/>} />
         <Route path='/customer/edit/:id' element={<CustomerManage/>} />
+        <Route path='/product/' element={<CustomerBrowse/>} />
+        <Route path='/product/:id' element={<CustomerBrowse/>} />
+        <Route path='/product/add' element={<CustomerManage/>} />
+        <Route path='/product/edit/:id' element={<CustomerManage/>} />
         <Route path='/*' element={<NotFound/>}/>
       </Routes>
     </>
