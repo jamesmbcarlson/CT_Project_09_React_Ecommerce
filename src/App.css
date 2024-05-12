@@ -59,3 +59,52 @@
   border-top: 2px solid rgb(13,110,253);
   border-bottom: 2px solid rgb(13,110,253);
 }
+
+.subhero-image {
+  width: 100%;
+  min-height: 200px;
+
+  margin: 10px 0px;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+
+  border-top: 2px solid rgb(13,110,253);
+  border-bottom: 2px solid rgb(13,110,253);
+}
+
+.img-customers {
+  background-image: url('./assets/subhero_customers.jpg');
+}
+
+.img-products {
+  background-image: url('./assets/subhero_products.jpg');
+}
+
+.img-orders {
+  background-image: url('./assets/subhero_orders.jpg');
+}
+
+li a, div a {
+  color: rgb(13,110,253);
+  font-weight:500;
+  text-decoration: none;
+}
+
+.footer {
+  height: 90px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  margin-top: 90px;
+  
+  background-color: rgb(13,110,253);
+  color: white;
+
+  border-top: 2px solid goldenrod;
+
+  box-shadow: 0 50vh 0 50vh rgb(13,110,253);
+}

@@ -11,6 +11,7 @@ function Home() {
           <h3>Here you can manage customers, products, and customer orders!</h3>
           <div className='hero-image'></div>
         </div>
+        <div className='footer'>🛒 eCommerce</div>
     </div>
   )
 }

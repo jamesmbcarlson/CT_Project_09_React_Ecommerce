@@ -114,6 +114,7 @@ function ProductManage() {
   return (
     <div>
       <NavBar />
+      <div className='subhero-image img-products'></div>
       <div className="page-content">
         {action === "Update Product" ?
         <h1>Edit Product</h1> :
@@ -154,6 +155,7 @@ function ProductManage() {
         close={handleClose} 
         colorHeaderBg={modalColorHeaderBg} 
         colorHeaderTxt={modalColorHeaderTxt}/>
+      <div className='footer'>🛒 eCommerce</div>
     </div>
   );
 }

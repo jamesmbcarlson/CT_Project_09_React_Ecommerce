@@ -98,7 +98,7 @@ function CustomerManage() {
       
       // update modal modalMessage
       setModalTitle("Success");
-      setModalMessage("Successfully Created New User!");
+      setModalMessage("Successfully Created New Customer!");
       setModalColorHeaderBg("bg-success");
       setModalColorHeaderTxt("text-light");
     }
@@ -117,6 +117,7 @@ function CustomerManage() {
   return (
     <div>
       <NavBar />
+      <div className='subhero-image img-customers'></div>
       <div className="page-content">
         {action === "Update Customer" ?
         <h1>Edit Customer</h1> :
@@ -159,6 +160,7 @@ function CustomerManage() {
           
           </Form>
         </div>
+        <div className='footer'>🛒 eCommerce</div>
       </div>
       <ModalComponent show={showModal} 
         title={modalTitle} 

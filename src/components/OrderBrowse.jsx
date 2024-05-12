@@ -110,6 +110,7 @@ function OrderBrowse() {
   return (
     <div>
       <NavBar/>
+      <div className='subhero-image img-orders'></div>
       <div className='browse-content'>
       {orderList ? 
       // display all orders
@@ -145,6 +146,7 @@ function OrderBrowse() {
               confirmButtonText = {modalConfirmText}
               closeButtonText = {modalCloseText} />
       </div>
+      <div className='footer'>🛒 eCommerce</div>
     </div>
   )
 }

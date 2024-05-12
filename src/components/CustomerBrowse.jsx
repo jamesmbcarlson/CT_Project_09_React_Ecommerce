@@ -104,6 +104,7 @@ function CustomerBrowse() {
   return (
     <div>
       <NavBar/>
+      <div className='subhero-image img-customers'></div>
       <div className='browse-content'>
       {customerList ? 
       // display all customers
@@ -128,7 +129,7 @@ function CustomerBrowse() {
         <p>No Customer Found with ID: {id}</p> 
         :
         // display only one customer by ID
-        <div>
+        <div className='d-flex flex-column align-items-center'>
           <h1>Customer: {customerData.name} (ID: {customerData.customer_id})</h1>
           <CustomerCard customerData={customerData} refreshCallback={updateDisplayAfterDeletion}/>
         </div>
@@ -139,6 +140,7 @@ function CustomerBrowse() {
               confirmButtonText = {modalConfirmText}
               closeButtonText = {modalCloseText} />
       </div>
+      <div className='footer'>🛒 eCommerce</div>
     </div>
   )
 }

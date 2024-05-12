@@ -15,30 +15,40 @@ function OrderManage() {
   const day = String(date.getDate()).padStart(2,"0");
   const dateToday = `${year}-${month}-${day}`;
 
-  // hook for incoming/outgoing order data
+  // hook for adding order data
   const [orderData, setOrderData] = useState({
-    // TO DO, UPDATE THESE FIELDS
     customer_id: "",
-    dateToday: "",
-    products: [],
+    order_date: dateToday,
+    products: []
   });
   
   const [customerList, setCustomerList] = useState(null);
   const [productList, setProductList] = useState(null);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [numProducts, setNumProducts] = useState(1);
-  let orderProductsCounter = [0];
+  const [selectedProducts, setSelectedProducts] = useState([1]);
+  const [orderTotal, setOrderTotal] = useState(0);
 
+  // adds another slectdown menu so more products may be added
   const handleAddProduct = () => {
     setSelectedProducts([...selectedProducts, '']);
     console.log("handleAddProduct accessed");
   };
 
+  // change value of product in product list
   const handleProductChange = (index, productId) => {
     const updatedProducts = [...selectedProducts];
     updatedProducts[index] = productId;
     setSelectedProducts(updatedProducts);
     console.log("handleProductChange");
+    console.log(updatedProducts)
+
+    // get running total of order
+    let total = 0;
+    for (let product of productList) {
+      if (updatedProducts.includes(String(product.product_id))) {
+        total += product.price;
+      }
+    }
+    setOrderTotal(total);
   };
 
   // modal hooks
@@ -48,22 +58,21 @@ function OrderManage() {
   const [modalColorHeaderBg, setModalColorHeaderBg] = useState("bg-primary");
   const [modalColorHeaderTxt, setModalColorHeaderTxt] = useState("text-light");
 
-  // fetch data for all customers
+  // close modal
+  const handleClose = () => setShowModal(false);
+
+  // fetch data for all customers and products
   useEffect(() => {
     const fetchData = async () => {
         const customerResponse = await axios.get('http://127.0.0.1:5000/customers');
         console.log(customerResponse.data);
         setCustomerList(customerResponse.data);
-        const prodcutResponse = await axios.get('http://127.0.0.1:5000/products');
-        console.log(prodcutResponse.data);
-        setProductList(prodcutResponse.data);
+        const productResponse = await axios.get('http://127.0.0.1:5000/products');
+        console.log(productResponse.data);
+        setProductList(productResponse.data);
       }
-
     fetchData();
   }, []);
-
-  // close modal
-  const handleClose = () => setShowModal(false);
 
   // update value of input fields
   const handleChange = (event) => {
@@ -73,7 +82,14 @@ function OrderManage() {
       ...prevData,
       [name]: value,
     }));
+    console.log(name, value);
   };
+
+  const handleRemoveProduct = (index) => {
+    const updatedProducts = [...selectedProducts];
+    updatedProducts.splice(index, 1);
+    setSelectedProducts(updatedProducts);
+  }
 
   // submit data
   const handleSubmit = async (event) => {
@@ -81,15 +97,15 @@ function OrderManage() {
     let response = null;
 
       response = await axios.post(`http://127.0.0.1:5000/orders`, {
-        name: orderData.name,
-        email: orderData.email,
-        phone: orderData.phone,
+        customer_id: orderData.customer_id,
+        order_date: orderData.order_date,
+        products: selectedProducts
       });
       console.log("Added Order:");
       
       // update modal modalMessage
       setModalTitle("Success");
-      setModalMessage("Successfully Created New User!");
+      setModalMessage("Successfully Created New Order!");
       setModalColorHeaderBg("bg-success");
       setModalColorHeaderTxt("text-light");
     console.log(response);
@@ -104,14 +120,10 @@ function OrderManage() {
     setShowModal(true);
   };
 
-  const incrementProductNum = () => {
-    orderProductsCounter.push(orderProductsCounter.length);
-    console.log(orderProductsCounter);
-  }
-
   return (
     <div>
       <NavBar />
+      <div className='subhero-image img-orders'></div>
       <div className="page-content">
         <h1>Add Order</h1>
         <div className="form-content">
@@ -119,21 +131,22 @@ function OrderManage() {
             <FloatingLabel controlId="date" label="Today's Date">
               <Form.Control
                 type="date"
-                name="date"
-                value={dateToday}
+                name="order_date"
+                value={orderData.order_date}
                 onChange={handleChange}
-                disabled={true}
+                // disabled={true}
               />
             </FloatingLabel>
 
             {/* Customer Selection */}
               {customerList &&
               <FloatingLabel controlId="floatingSelect" label="Select Customer" className="my-3">
-                <Form.Select>
+                <Form.Select name="customer_id" onChange={handleChange}>
                   {customerList.map(customer => (
                   <option 
                     key={customer.customer_id}
-                    value={customer.customer_id}>
+                    value={customer.customer_id}
+                    >
                     {customer.customer_id} - {customer.name}
                   </option>
                   ))}
@@ -142,11 +155,12 @@ function OrderManage() {
             }
             
             {/* Product Selection */}
+            {/* Known Issue: Cannot add more than 1 of any product. This is an issue that was never resolved in the corresponding Flask project */}
             {selectedProducts.map((selectedProductId, index) => (           
               productList &&
               <div key={index}>
                 <FloatingLabel controlId={`select-${index}`} label={`Select Product ${index + 1}`} className="my-3">
-                  <Form.Select onChange={(e) => handleProductChange(index, e.target.value)}>
+                  <Form.Select onChange={(e) => handleProductChange(index, e.target.value)} style={{display:"inline"}}>
                     {productList.map(product => (
                     <option 
                       key={product.product_id}
@@ -158,7 +172,12 @@ function OrderManage() {
                 </FloatingLabel>
                 </div>
               ))}
-              <Button onClick={handleAddProduct}>+</Button>
+              <div className="d-flex justify-content-between">
+                <Button onClick={handleAddProduct} style={{display:"inline"}} variant='outline-primary'>Add Another Product</Button>
+                {selectedProducts.length > 1 && (
+                  <Button onClick={() => handleRemoveProduct(selectedProducts.lenghth - 1)} variant="outline-danger" style={{display:"inline"}}>Remove Last Product</Button>
+                )}
+              </div>
 
             <div className="d-flex justify-content-between mt-4">
               <Button type="submit" variant="primary">
@@ -175,6 +194,7 @@ function OrderManage() {
         close={handleClose} 
         colorHeaderBg={modalColorHeaderBg} 
         colorHeaderTxt={modalColorHeaderTxt}/>
+      <div className='footer'>🛒 eCommerce</div>
     </div>
   );
 }

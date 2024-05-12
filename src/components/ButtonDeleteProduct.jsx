@@ -46,22 +46,25 @@ const deleteProduct = async (idToDelete) => {
   setModalConfirmText("Confirm");
   setModalCloseText("Close");
   
-  if(response.status === 200) {
+  if(response.data.Error) {
+    setModalTitle('Error');
+    setModalMessage(`Could not delete product with ID: ${idToDelete}. Products already in orders cannot be deleted.`);
+    setModalColorHeaderBg("bg-danger");
+    setModalColorHeaderTxt("text-light");
+  }
+  else if(response.status === 200) {
       setModalTitle('Success');
       setModalMessage(`Product with ID: ${idToDelete} has successfully been deleted.`)
       setModalColorHeaderBg("bg-success");
       setModalColorHeaderTxt("text-light");
-      
-      
-    } else {
-        setModalTitle('Error');
-        setModalMessage('Something went wrong!');
-        setModalColorHeaderBg("bg-danger");
-        setModalColorHeaderTxt("text-light");
-        
-    }
-    setShowModal(true);
-    setTimeout( ()=> { refreshCallback(); }, 1500);
+  } else {
+      setModalTitle('Error');
+      setModalMessage('Something went wrong!');
+      setModalColorHeaderBg("bg-danger");
+      setModalColorHeaderTxt("text-light");
+  }
+  setShowModal(true);
+  setTimeout( ()=> { refreshCallback(); }, 1500);
 }
 
   return (

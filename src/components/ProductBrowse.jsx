@@ -103,6 +103,7 @@ function ProductBrowse() {
   return (
     <div>
       <NavBar/>
+      <div className='subhero-image img-products'></div>
       <div className='browse-content'>
         {productList ? 
         // display all products
@@ -126,7 +127,7 @@ function ProductBrowse() {
           <h1>No Product Found with ID: {id}</h1> 
           :
           // display only one product by ID
-          <div>
+          <div className='d-flex flex-column align-items-center'>
             <h1>Product: {productData.name} (ID: {productData.product_id})</h1>
             <ProductCard productData={productData} refreshCallback={updateDisplayAfterDeletion}/>
           </div>
@@ -137,6 +138,7 @@ function ProductBrowse() {
               confirmCallback ={modalConfirmCallback}
               confirmButtonText = {modalConfirmText}
               closeButtonText = {modalCloseText} />
+      <div className='footer'>🛒 eCommerce</div>
     </div>
   )
 }

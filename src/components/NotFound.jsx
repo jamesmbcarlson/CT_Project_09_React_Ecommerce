@@ -6,7 +6,11 @@ function NotFound() {
   return (
     <div>
         <NavBar/>
-      <h1>404 - Page Not Found</h1>
+        <div className='page-content'>
+          <h1>404 - Page Not Found</h1>
+        </div>
+        <div className='hero-image'></div>
+        <div className='footer'>🛒 eCommerce</div>
     </div>
   )
 }

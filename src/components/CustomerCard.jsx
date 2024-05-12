@@ -14,6 +14,19 @@ function CustomerCard(props) {
                 <Card.Subtitle className="mb-2 text-muted">Customer ID: {customerData.customer_id}</Card.Subtitle>
                 <Card.Text>Email: {customerData.email}</Card.Text>
                 <Card.Text>Phone: {customerData.phone}</Card.Text>
+                {customerData.orders.length > 0 &&
+                <div>
+                <Card.Text>Orders:</Card.Text>
+                <ul>
+                    {customerData.orders.map(order =>
+                        <li key={order.order_id}>
+                            <a href={`/order/${order.order_id}`}>
+                                Order ID: {order.order_id}</a>
+                        </li>
+                    )}
+                </ul>
+                </div>
+                }
                 <Card.Footer className='mt-3 pb-0 d-flex justify-content-around px-5 bg-transparent'>
                     <Button variant="outline-primary" href={`/customer/edit/${customerData.customer_id}`}>Edit</Button>
                     <ButtonDelete customerData={customerData} refreshCallback={refreshCallback} />

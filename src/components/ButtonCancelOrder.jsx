@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import ModalComponent from './ModalComponent';
 
 function ButtonCancelOrder(props) {
-    const {customerData, refreshCallback, buttonText="Delete"} = props;
+    const {orderData, refreshCallback, buttonText="Cancel"} = props;
 
 // modal hooks
 const [showModal, setShowModal] = useState(false);
@@ -21,24 +21,24 @@ const [modalColorHeaderTxt, setModalColorHeaderTxt] = useState("text-light");
   // close modal
 const handleClose = () => setShowModal(false);
 
-// display deletion confirmation
-const showDeleteWarning = () => {
+// display cancellation confirmation
+const showCancelWarning = () => {
   setModalTitle("Warning");
-  setModalMessage("Are you sure you want to delete this customer?");
+  setModalMessage("Are you sure you want to cancel this order?");
   setModalNeedsConfirmation(true);
-  setModalConfirmCallback(() => () => deleteCustomer(customerData.customer_id));
-  setModalConfirmText("Delete");
-  setModalCloseText("Cancel");
+  setModalConfirmCallback(() => () => cancelOrder(orderData.order_id));
+  setModalConfirmText("Yes");
+  setModalCloseText("No");
   setModalColorHeaderBg("bg-warning");
   setModalColorHeaderTxt("text-dark");
   setShowModal(true);
 }
 
-// delete customer with given ID
-const deleteCustomer = async (idToDelete) => {
-  console.log("DEBUG: deleteCustomer called from ButtonDelete")
+// cancel with given ID
+const cancelOrder = async (idToCancel) => {
+  console.log("DEBUG: cancelOrder called from ButtonCancelOrder")
 
-  const response = await axios.delete(`http://127.0.0.1:5000/customers/${idToDelete}`);
+  const response = await axios.put(`http://127.0.0.1:5000/orders/cancel/${idToCancel}`);
 
   setShowModal(false);
   setModalNeedsConfirmation(false);
@@ -48,13 +48,13 @@ const deleteCustomer = async (idToDelete) => {
   
   if(response.data.Error) {
     setModalTitle('Error');
-    setModalMessage(`Could not delete customer with ID: ${idToDelete}. Customers with orders cannot be deleted.`);
+    setModalMessage(`${response.data.Error}`);
     setModalColorHeaderBg("bg-danger");
     setModalColorHeaderTxt("text-light");
   }
   else if(response.status === 200) {
     setModalTitle('Success');
-    setModalMessage(`Customer with ID: ${idToDelete} has successfully been deleted.`)
+    setModalMessage(`Order with ID: ${idToCancel} has successfully been cancelled.`)
     setModalColorHeaderBg("bg-success");
     setModalColorHeaderTxt("text-light");
   } 
@@ -71,7 +71,7 @@ const deleteCustomer = async (idToDelete) => {
 
   return (
     <div>
-        <Button variant='outline-danger' onClick={() => showDeleteWarning()}>{buttonText}</Button>
+        <Button variant='outline-danger' onClick={() => showCancelWarning()}>{buttonText}</Button>
         <ModalComponent show={showModal} title={modalTitle} message={modalMessage} close={handleClose}
             isConfirmation={modalNeedsConfirmation} 
             confirmCallback={modalConfirmCallback}
