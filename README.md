@@ -6,10 +6,8 @@ This project was built as an assignment for Coding Temple.
 
 ---
 
-<br>
-This E-Commerce application runs in conjunction with my previous [Back-End Flask E-Commerce Project](https://github.com/jamesmbcarlson/CT_Project_05_Ecommerce_API), and was built using JavaScript, React, React Router, React Bootstrap, HTML, and CSS.
+<br>This E-Commerce application runs in conjunction with my previous [Back-End Flask E-Commerce Project](https://github.com/jamesmbcarlson/CT_Project_05_Ecommerce_API), and was built using JavaScript, React, React Router, React Bootstrap, HTML, and CSS.
 
-<br>
 This application is a front-end interface for a database of <b>Customers</b>, <b>Products</b>, and the <b>Orders</b> of Products a Customer can place.
 
 ### <b>Customers</b>
