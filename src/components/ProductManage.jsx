@@ -119,7 +119,7 @@ function ProductManage() {
         <h1>Edit Product</h1> :
         <h1>{action}</h1>}
         <div className="form-content">
-          <Form className="border rounded m-4 p-4" onSubmit={handleSubmit}>
+          <Form className="border rounded m-4 p-4 shadow" onSubmit={handleSubmit}>
             <FloatingLabel controlId="name" label="Name">
               <Form.Control
                 type="text"

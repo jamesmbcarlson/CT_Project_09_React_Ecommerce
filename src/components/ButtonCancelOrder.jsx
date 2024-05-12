@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 
 import ModalComponent from './ModalComponent';
 
-function ButtonDelete(props) {
+function ButtonCancelOrder(props) {
     const {customerData, refreshCallback, buttonText="Delete"} = props;
 
 // modal hooks
@@ -83,4 +83,4 @@ const deleteCustomer = async (idToDelete) => {
   )
 }
 
-export default ButtonDelete
+export default ButtonCancelOrder

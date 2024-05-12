@@ -8,7 +8,7 @@ function CustomerCard(props) {
 
   return (
     <div>
-        <Card className="custom-card text-start m-4" border='primary' style={{ width: '20rem' }}>
+        <Card className="custom-card text-start m-4 shadow" border='primary' style={{ width: '20rem' }}>
             <Card.Body>
                 <Card.Title>Name: {customerData.name}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">Customer ID: {customerData.customer_id}</Card.Subtitle>

@@ -7,9 +7,9 @@ function Home() {
     <div>
         <NavBar/>
         <div className='page-content'>
-          <h1>Welcome!</h1>
+          <h1><b>Welcome!</b></h1>
+          <h3>Here you can manage customers, products, and customer orders!</h3>
           <div className='hero-image'></div>
-          <h2>Here you can manage customers, products, and customer orders!</h2>
         </div>
     </div>
   )
