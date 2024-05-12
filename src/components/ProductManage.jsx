@@ -4,18 +4,17 @@ import axios from "axios";
 import { Form, FloatingLabel, Button } from "react-bootstrap";
 
 import NavBar from "./NavBar";
-import ButtonDelete from "./ButtonDelete";
+import ButtonDeleteProduct from "./ButtonDeleteProduct";
 import ModalComponent from "./ModalComponent";
 
-// CustomerManage is used to add new customers and edit existing customers
-function CustomerManage() {
-  // hook for incoming/outgoing customer data
-  const [customerData, setCustomerData] = useState({
+// ProductManage is used to add new products and edit existing products
+function ProductManage() {
+  // hook for incoming/outgoing product data
+  const [productData, setProductData] = useState({
     name: "",
-    email: "",
-    phone: "",
+    price: ""
   });
-  const [action, setAction] = useState("Add Customer");
+  const [action, setAction] = useState("Add Product");
   const navigate = useNavigate();
 
   // modal hooks
@@ -31,22 +30,22 @@ function CustomerManage() {
   // id passed through URI
   const { id } = useParams();
 
-  // fetch customer data for editing
+  // fetch product data for editing
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`http://127.0.0.1:5000/customers/${id}`);
+      const response = await axios.get(`http://127.0.0.1:5000/products/${id}`);
       console.log(response);
 
-      // check for valid data; warn user if not found; set to customer data if found
-      if (response.data.customer_id == undefined) {
+      // check for valid data; warn user if not found; set to product data if found
+      if (response.data.product_id == undefined) {
         setModalTitle("Warning");
-        setModalMessage(`No customer found with ID: ${id}`);
+        setModalMessage(`No product found with ID: ${id}`);
         setModalColorHeaderBg("bg-warning");
         setModalColorHeaderTxt("text-dark");
         setShowModal(true);
       } else {
-        setCustomerData(response.data);
-        setAction("Update Customer");
+        setProductData(response.data);
+        setAction("Update Product");
       }
     };
     fetchData();
@@ -56,15 +55,15 @@ function CustomerManage() {
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    setCustomerData((prevData) => ({
+    setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  // return to customer page after deletion 
-  const returnToCustomers = () => {
-    navigate ('/customers');
+  // return to product page after deletion 
+  const returnToProducts = () => {
+    navigate ('/products');
   }
 
   // submit data
@@ -72,33 +71,31 @@ function CustomerManage() {
     event.preventDefault();
     let response = null;
 
-    // handle editing of customer data
+    // handle editing of product data
     if (id) {
-      response = await axios.put(`http://127.0.0.1:5000/customers/${id}`, {
-        name: customerData.name,
-        email: customerData.email,
-        phone: customerData.phone,
+      response = await axios.put(`http://127.0.0.1:5000/products/${id}`, {
+        name: productData.name,
+        price: productData.price
       });
-      console.log("Updated Customer:");
+      console.log("Updated Product:");
 
       // update modal modalMessage
       setModalTitle("Success");
-      setModalMessage("Successfully Updated Customer!");
+      setModalMessage("Successfully Updated Product!");
       setModalColorHeaderBg("bg-success");
       setModalColorHeaderTxt("text-light");
 
-    // handle adding new customer
+    // handle adding new product
     } else {
-      response = await axios.post(`http://127.0.0.1:5000/customers`, {
-        name: customerData.name,
-        email: customerData.email,
-        phone: customerData.phone,
+      response = await axios.post(`http://127.0.0.1:5000/products`, {
+        name: productData.name,
+        price: productData.price
       });
-      console.log("Added Customer:");
+      console.log("Added Product:");
       
       // update modal modalMessage
       setModalTitle("Success");
-      setModalMessage("Successfully Created New User!");
+      setModalMessage("Successfully Added New Product!");
       setModalColorHeaderBg("bg-success");
       setModalColorHeaderTxt("text-light");
     }
@@ -118,8 +115,8 @@ function CustomerManage() {
     <div>
       <NavBar />
       <div className="page-content">
-        {action === "Update Customer" ?
-        <h1>Edit Customer</h1> :
+        {action === "Update Product" ?
+        <h1>Edit Product</h1> :
         <h1>{action}</h1>}
         <div className="form-content">
           <Form className="border rounded m-4 p-4" onSubmit={handleSubmit}>
@@ -127,36 +124,27 @@ function CustomerManage() {
               <Form.Control
                 type="text"
                 name="name"
-                value={customerData.name}
+                value={productData.name}
                 onChange={handleChange}
                 placeholder="Name"
               />
             </FloatingLabel>
-            <FloatingLabel controlId="email" label="Email" className="my-3">
+            <FloatingLabel controlId="price" label="Price" className="my-3">
               <Form.Control
-                type="email"
-                name="email"
-                value={customerData.email}
+                type="number"
+                name="price"
+                value={productData.price}
                 onChange={handleChange}
                 placeholder="email@email.com"
-              />
-            </FloatingLabel>
-            <FloatingLabel controlId="phone" label="Phone" className="my-3">
-              <Form.Control
-                type="text"
-                name="phone"
-                value={customerData.phone}
-                onChange={handleChange}
-                placeholder="123-456-7890"
               />
             </FloatingLabel>
             <div className="d-flex justify-content-between mt-4">
               <Button type="submit" variant="primary">
                 {action}
               </Button>
-              {id && <ButtonDelete customerData={customerData} refreshCallback={returnToCustomers} buttonText={"Delete Customer"} />}
+              {id && <ButtonDeleteProduct productData={productData} refreshCallback={returnToProducts} buttonText={"Delete Product"} />}
             </div>
-          
+
           </Form>
         </div>
       </div>
@@ -170,4 +158,4 @@ function CustomerManage() {
   );
 }
 
-export default CustomerManage;
+export default ProductManage;

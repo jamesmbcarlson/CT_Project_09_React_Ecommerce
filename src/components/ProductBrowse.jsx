@@ -4,18 +4,17 @@ import axios from 'axios';
 import { Button } from 'react-bootstrap';
 
 import NavBar from './NavBar'
-import CustomerCard from './CustomerCard';
+import ProductCard from './ProductCard';
 import ModalComponent from './ModalComponent';
-import '../App.css';
 
-function CustomerBrowse() {
+function ProductBrowse() {
 
-  const [customerData, setCustomerData] = useState({
+  const [productData, setProductData] = useState({
     name: "",
     email: "",
     phone: ""
   });
-  const [customerList, setCustomerList] = useState(null);
+  const [productList, setProductList] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(true);
   const [showAfterDeletion, setShowAfterDeletion] = useState(false);
 
@@ -34,19 +33,19 @@ function CustomerBrowse() {
   // display deletion confirmation
   const showDeleteWarning = (idToDelete) => {
     setModalTitle("WARNING");
-    setModalMessage("Are you sure you want to delete this customer?");
+    setModalMessage("Are you sure you want to delete this product?");
     setModalNeedsConfirmation(true);
-    setModalConfirmCallback(() => () => deleteCustomer(idToDelete));
+    setModalConfirmCallback(() => () => deleteProduct(idToDelete));
     setModalConfirmText("Delete");
     setModalCloseText("Cancel");
     setShowModal(true);
   }
 
-  // delete customer with given ID
-  const deleteCustomer = async (idToDelete) => {
-    console.log("DEBUG: deleteCustomer called")
+  // delete product with given ID
+  const deleteProduct = async (idToDelete) => {
+    console.log("DEBUG: deleteProduct called")
 
-    const response = await axios.delete(`http://127.0.0.1:5000/customers/${idToDelete}`);
+    const response = await axios.delete(`http://127.0.0.1:5000/products/${idToDelete}`);
     
     setShowModal(false);
     setModalNeedsConfirmation(false);
@@ -56,8 +55,8 @@ function CustomerBrowse() {
 
     if(response.status === 200) {
       setModalTitle('Success');
-      setModalMessage(`Customer with ID: ${idToDelete} has successfully been deleted.`)
-      setCustomerData({ name: "", email: "", phone: "" });
+      setModalMessage(`Product with ID: ${idToDelete} has successfully been deleted.`)
+      setProductData({ name: "", email: "", phone: "" });
     } else {
       setModalTitle('ERROR');
       setModalMessage('Something went wrong!');
@@ -65,27 +64,27 @@ function CustomerBrowse() {
       setShowModal(true);
   }
 
-  // fetch customer data to read
+  // fetch product data to read
   const {id} = useParams();
   useEffect(() => {
     const fetchData = async () => {
-      // fetch data for single customer 
+      // fetch data for single product 
       if(id) {
-        const response = await axios.get(`http://127.0.0.1:5000/customers/${id}`);
+        const response = await axios.get(`http://127.0.0.1:5000/products/${id}`);
         console.log(response.data);
         if(Object.keys(response.data).length === 0) {
           setModalTitle('WARNING');
-          setModalMessage(`No customer found with ID: ${id}`)
+          setModalMessage(`No product found with ID: ${id}`)
           setShowModal(true);
         } else {
-          setCustomerData(response.data);
+          setProductData(response.data);
         }
       }
-      // fetch data for all customers
+      // fetch data for all products
       else {
-        const response = await axios.get('http://127.0.0.1:5000/customers');
+        const response = await axios.get('http://127.0.0.1:5000/products');
         console.log(response.data);
-        setCustomerList(response.data);
+        setProductList(response.data);
       }
     }
     fetchData();
@@ -105,42 +104,41 @@ function CustomerBrowse() {
     <div>
       <NavBar/>
       <div className='browse-content'>
-      {customerList ? 
-      // display all customers
-      <div>
-        <h1>Customers</h1> 
-        <div className='btn-add'>
-          <Button href='/customer/add'>Add Customer</Button>
-        </div>
-
-          {customerList.map(customer => (
-            <CustomerCard key={customer.customer_id} customerData={customer} refreshCallback={refresh}/>
-          ))}
-
-          </div>
-        :
-        // post-deletion message
-        (showAfterDeletion) ?
-        <h1>Customer has been deleted.</h1>
-        :
-        // no user to display
-        (customerData.customer_id === undefined) ?
-        <p>No Customer Found with ID: {id}</p> 
-        :
-        // display only one customer by ID
+        {productList ? 
+        // display all products
         <div>
-          <h1>Customer: {customerData.name} (ID: {customerData.customer_id})</h1>
-          <CustomerCard customerData={customerData} refreshCallback={updateDisplayAfterDeletion}/>
+          <h1>Products</h1> 
+            <div className='btn-add'>
+              <Button href='/product/add'>Add Product</Button>
+            </div>
+            {productList.map(product => (
+              <ProductCard key={product.product_id} productData={product} refreshCallback={refresh}/>
+            ))}
+
+            </div>
+          :
+          // post-deletion message
+          (showAfterDeletion) ?
+          <h1>Product has been deleted.</h1>
+          :
+          // no user to display
+          (productData.product_id === undefined) ?
+          <h1>No Product Found with ID: {id}</h1> 
+          :
+          // display only one product by ID
+          <div>
+            <h1>Product: {productData.name} (ID: {productData.product_id})</h1>
+            <ProductCard productData={productData} refreshCallback={updateDisplayAfterDeletion}/>
+          </div>
+          }
         </div>
-        }
       <ModalComponent show={showModal} title={modalTitle} message={modalMessage} close={handleClose}
               isConfirmation ={modalNeedsConfirmation} 
               confirmCallback ={modalConfirmCallback}
               confirmButtonText = {modalConfirmText}
               closeButtonText = {modalCloseText} />
-      </div>
     </div>
   )
 }
 
-export default CustomerBrowse
+export default ProductBrowse

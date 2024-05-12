@@ -1,0 +1,61 @@
+.navbar {
+  border-bottom: 2px solid goldenrod;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.page-content h1 {
+  margin-top: 40px;
+}
+
+.browse-content {
+  display: flex;
+  justify-content: center;
+}
+
+.browse-content h1 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.btn-add {
+  display: flex;
+  justify-content: center;
+
+}
+
+.form-content {
+  min-width: 320px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0px auto;
+}
+
+.border {
+  background-color: rgba(13, 109, 253, 0.3)
+}
+
+.custom-card p {
+  margin-bottom: 6px;
+}
+
+.hero-image {
+  width: 100%;
+  min-height: 420px;
+
+  margin: 50px 0px;
+
+  background-image: url('./assets/hero_corgi.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;  
+
+  border-top: 2px solid rgb(13,110,253);
+  border-bottom: 2px solid rgb(13,110,253);
+}
